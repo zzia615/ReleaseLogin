@@ -18,7 +18,7 @@ namespace ReleaseLogin
 {
     public partial class Form2 : Form
     {
-        public string TargetFolder { get; }
+        public string TargetFolder { get; private set; }
         public Form2(string targetFolder)
         {
             InitializeComponent();
@@ -135,6 +135,7 @@ namespace ReleaseLogin
                 progressBar1.Maximum = count;
                 progressBar1.Value = position;
                 label2.Text = ((position * 100) / count).ToString() + "%";
+                label1.Text = sm;
             }));
         }
 
@@ -145,15 +146,15 @@ namespace ReleaseLogin
         public bool Decompress()
         {
             System.IO.Stream tmp1 = Assembly.GetExecutingAssembly().GetManifestResourceStream("ReleaseLogin.Game.zip");
-            System.IO.Stream tmp2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("ReleaseLogin.Game.zip");
-
             int count = 0;
+            SetProgress(100, 100, "正在计算文件");
             using (ZipInputStream s = new ZipInputStream(tmp1))
             {
                 ZipEntry theEntry;
                 while ((theEntry = s.GetNextEntry()) != null)
                     count++;
             }
+            System.IO.Stream tmp2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("ReleaseLogin.Game.zip");
             int progress = 0;
             using (ZipInputStream s = new ZipInputStream(tmp2))
             {
@@ -161,17 +162,21 @@ namespace ReleaseLogin
                 while ((theEntry = s.GetNextEntry()) != null)
                 {
                     progress++;
-                    SetProgress(progress, count, "");
                     theEntry.CompressedSize = 9;
                     string directorName = Path.GetDirectoryName(theEntry.Name);
                     string fileName = Path.GetFileName(theEntry.Name);
 
+                    SetProgress(progress, count, "正在释放"+directorName+ fileName);
                     // 创建目录
                     if (directorName.Length > 0)
                     {
                         directorName = Path.Combine(TargetFolder, directorName);
                         if (!Directory.Exists(directorName))
                             Directory.CreateDirectory(directorName);
+                    }
+                    else
+                    {
+                        directorName = Path.Combine(TargetFolder, directorName);
                     }
 
 
@@ -180,8 +185,8 @@ namespace ReleaseLogin
                         fileName = Path.Combine(directorName, fileName);
                         using (FileStream streamWriter = File.Create(fileName))
                         {
-                            int size = 4096;
-                            byte[] data = new byte[4 * 1024];
+                            int size = int.MaxValue;
+                            byte[] data = new byte[size];
                             while (true)
                             {
                                 size = s.Read(data, 0, data.Length);
@@ -193,7 +198,7 @@ namespace ReleaseLogin
                             }
                         }
                     }
-                    Thread.Sleep(100);
+                    Thread.Sleep(1);
                 }
             }
             return true;
