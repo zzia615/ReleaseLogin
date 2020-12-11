@@ -154,6 +154,7 @@ namespace ReleaseLogin
                 while ((theEntry = s.GetNextEntry()) != null)
                     count++;
             }
+            GC.Collect();
             System.IO.Stream tmp2 = Assembly.GetExecutingAssembly().GetManifestResourceStream("ReleaseLogin.Game.zip");
             int progress = 0;
             using (ZipInputStream s = new ZipInputStream(tmp2))
@@ -185,7 +186,7 @@ namespace ReleaseLogin
                         fileName = Path.Combine(directorName, fileName);
                         using (FileStream streamWriter = File.Create(fileName))
                         {
-                            int size = int.MaxValue;
+                            int size = 1024*1024*100;
                             byte[] data = new byte[size];
                             while (true)
                             {

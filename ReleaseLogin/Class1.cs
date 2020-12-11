@@ -1,5 +1,4 @@
-﻿using IWshRuntimeLibrary;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -27,6 +26,7 @@ namespace ReleaseLogin
         public static void CreateShortcut(string directory, string shortcutName, string targetPath,
              string description = null, string iconLocation = null)
         {
+            /*
             if (!System.IO.Directory.Exists(directory))
             {
                 System.IO.Directory.CreateDirectory(directory);
@@ -41,6 +41,7 @@ namespace ReleaseLogin
             shortcut.Description = description;//设置备注
             shortcut.IconLocation = string.IsNullOrWhiteSpace(iconLocation) ? targetPath : iconLocation;//设置图标路径
             shortcut.Save();//保存快捷方式
+            */
         }
         /// <summary>
         /// 创建桌面快捷方式

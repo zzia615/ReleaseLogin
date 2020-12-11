@@ -16,7 +16,7 @@ namespace ReleaseLogin
         {
 
             ReleaseDll("ICSharpCode.SharpZipLib.dll");
-            ReleaseDll("Interop.IWshRuntimeLibrary.dll");
+           // ReleaseDll("Interop.IWshRuntimeLibrary.dll");
 
 
 
